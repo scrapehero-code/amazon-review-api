@@ -1,0 +1,58 @@
+product_title:
+    css: 'h1 a[data-hook="product-link"]'
+    type: Text
+reviews:
+    css: 'div.review div.a-section.celwidget'
+    multiple: true
+    type: Text
+    children:
+        title:
+            css: a.review-title
+            type: Text
+        content:
+            css: 'div.a-row.review-data span.review-text'
+            type: Text
+        date:
+            css: span.a-size-base.a-color-secondary
+            type: Text
+        images:
+            css: img.review-image-tile
+            multiple: true
+            type: Attribute
+            attribute: src
+        author:
+            css: span.a-profile-name
+            type: Text
+        rating:
+            css: 'div.a-row:nth-of-type(2) > a.a-link-normal:nth-of-type(1)'
+            type: Attribute
+            attribute: title
+        found_helpful:
+            css: 'span[data-hook="review-voting-widget"] span.a-size-base'
+            type: Text
+        variant:
+            css: a.a-size-mini
+            type: Text
+        verified_purchase:
+            css: 'span[data-hook="avp-badge"]'
+            type: Text
+next_page:
+    css: 'li.a-last a'
+    type: Link
+average_rating:
+    css: 'span[data-hook="rating-out-of-text"]'
+    type: Text
+number_of_reviews:
+    css: 'div[data-hook="total-review-count"] span.a-size-base'
+    type: Text
+histogram:
+    css: tr.a-histogram-row
+    multiple: true
+    type: Text
+    children:
+        key:
+            css: 'td.aok-nowrap a.a-link-normal'
+            type: Text
+        value:
+            css: 'td.a-text-right a.a-link-normal'
+            type: Text
