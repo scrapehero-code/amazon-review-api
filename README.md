@@ -2,7 +2,7 @@
 
 A very basic API to scrape product reviews from Amazon and get data in real time as JSON with all fields, that amazon product adverstising api does not provide you. 
 
-Full Tutorail - [Amazon Product Reviews API – build you own using Python](https://www.scrapehero.com/free-amazon-product-reviews-api-build-you-own-using-python/_
+Full Tutorail - [Amazon Product Reviews API – build you own using Python](https://www.scrapehero.com/free-amazon-product-reviews-api-build-you-own-using-python/)
 
 ## Usage
 
