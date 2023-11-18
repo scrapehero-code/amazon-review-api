@@ -34,14 +34,23 @@ def scrape(url):
     data = extractor.extract(r.text,base_url=url)
     reviews = []
     for r in data['reviews']:
-        r["product"] = data["product_title"]
+        r['title'] = r['title'].split(' out of 5 stars ')[-1]
+        r['product'] = data['product_title']
         r['url'] = url
+        if r['found_helpful'] is None:
+            r['found_helpful'] = 0
+        elif 'One person found this helpful' in r['found_helpful']:
+            r['found_helpful'] = 1
+        elif 'people found this helpful' in r['found_helpful']:
+            r['found_helpful'] = int(r['found_helpful'].split()[0])
+        else:
+            r['found_helpful'] = 0
         if 'verified_purchase' in r:
             if 'Verified Purchase' in r['verified_purchase']:
                 r['verified_purchase'] = True
             else:
                 r['verified_purchase'] = False
-        r['rating'] = r['rating'].split(' out of')[0]
+        r['rating'] = r['title'].split(' out of')[0]
         date_posted = r['date'].split('on ')[-1]
         if r['images']:
             r['images'] = "\n".join(r['images'])
@@ -53,7 +62,7 @@ def scrape(url):
     data['histogram'] = histogram
     data['average_rating'] = float(data['average_rating'].split(' out')[0])
     data['reviews'] = reviews
-    data['number_of_reviews'] = int(data['number_of_reviews'].split('  customer')[0])
+    data['number_of_reviews'] = int(data['number_of_reviews'].split(' global ratings')[0].replace(',',''))
     return data 
     
 @app.route('/')
