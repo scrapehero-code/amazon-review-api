@@ -34,6 +34,7 @@ def scrape(url):
     data = extractor.extract(r.text,base_url=url)
     reviews = []
     for r in data['reviews']:
+        r['rating'] = int(float(r['title'].split(' out of')[0]))
         r['title'] = r['title'].split(' out of 5 stars ')[-1]
         r['product'] = data['product_title']
         r['url'] = url
@@ -50,7 +51,6 @@ def scrape(url):
                 r['verified_purchase'] = True
             else:
                 r['verified_purchase'] = False
-        r['rating'] = r['title'].split(' out of')[0]
         date_posted = r['date'].split('on ')[-1]
         if r['images']:
             r['images'] = "\n".join(r['images'])
