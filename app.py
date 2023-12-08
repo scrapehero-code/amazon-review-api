@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 import selectorlib
 import requests
 import json
@@ -74,7 +74,7 @@ def scrape(url):
     return data
 
 
-def to_json(data, status):
+def to_json(data, status=200):
     return json.dumps(data, indent=2), status, {'Content-Type': 'application/json; charset=utf-8'}
 
 
@@ -91,7 +91,7 @@ def api():
     if url:
         try:
             data = scrape(url)
-            return to_json(data, 200)
+            return to_json(data)
         except Exception as e:
             return to_json({'error': str(e)}, 400)
     return to_json({'error': 'URL to scrape is not provided'}, 400)
