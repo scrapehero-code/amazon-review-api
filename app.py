@@ -3,8 +3,10 @@ import selectorlib
 import requests
 import json
 from dateutil import parser as dateparser
+
 app = Flask(__name__)
 extractor = selectorlib.Extractor.from_yaml_file('selectors.yml')
+
 
 def scrape(url):
     headers = {
@@ -22,17 +24,22 @@ def scrape(url):
     }
 
     # Download the page using requests
-    print("Downloading %s"%url)
+    print("Downloading %s" % url)
     r = requests.get(url, headers=headers)
     # Simple check to check if page was blocked (Usually 503)
     if r.status_code > 500:
         if "To discuss automated access to Amazon data please contact" in r.text:
-            print("Page %s was blocked by Amazon. Please try using better proxies\n"%url)
+            raise Exception("Page %s was blocked by Amazon. Please try using better proxies\n" % url)
         else:
-            print("Page %s must have been blocked by Amazon as the status code was %d"%(url,r.status_code))
-        return None
+            raise Exception("Page %s must have been blocked by Amazon as the status code was %d" % (url, r.status_code))
+
     # Pass the HTML of the page and create
-    data = extractor.extract(r.text,base_url=url)
+    data = extractor.extract(r.text, base_url=url)
+
+    # check if the extracted data is empty
+    if data['reviews'] is None:
+        raise Exception("ERROR: No data extracted. Check selector config")
+
     reviews = []
     for r in data['reviews']:
         r['rating'] = int(float(r['title'].split(' out of')[0]))
@@ -63,19 +70,28 @@ def scrape(url):
         histogram[h['key']] = h['value']
     data['histogram'] = histogram
     data['average_rating'] = float(data['average_rating'].split(' out')[0])
-    data['number_of_reviews'] = int(data['number_of_reviews'].split(' global ratings')[0].replace(',',''))
-    return data 
-    
+    data['number_of_reviews'] = int(data['number_of_reviews'].split(' global ratings')[0].replace(',', ''))
+    return data
+
+
+def to_json(data, status):
+    return json.dumps(data, indent=2), status, {'Content-Type': 'application/json; charset=utf-8'}
+
+
 @app.route('/')
 def api():
-    url = request.args.get('url',None)
-    if request.args.get('pageNumber',None) is None:
+    url = request.args.get('url', None)
+    if request.args.get('pageNumber', None) is None:
         url += '&pageNumber=1'
-    elif int(request.args.get('pageNumber',None)) <= 10:
-        url += '&pageNumber='+request.args.get('pageNumber',None)
+    elif int(request.args.get('pageNumber', None)) <= 10:
+        url += '&pageNumber=' + request.args.get('pageNumber', None)
     else:
-        return json.dumps({'error': 'Page number should be less than or equal to 10'}, indent=2), 400, {'Content-Type': 'application/json; charset=utf-8'}
+        return to_json({'error': 'Page number should be less than or equal to 10'}, 400)
+
     if url:
-        data = scrape(url)
-        return json.dumps(data, indent=2), 200, {'Content-Type': 'application/json; charset=utf-8'}
-    return json.dumps({'error': 'URL to scrape is not provided'}, indent=2), 400, {'Content-Type': 'application/json; charset=utf-8'}
+        try:
+            data = scrape(url)
+            return to_json(data, 200)
+        except Exception as e:
+            return to_json({'error': str(e)}, 400)
+    return to_json({'error': 'URL to scrape is not provided'}, 400)
