@@ -136,4 +136,10 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-.vscode/
+.vscode/### Example user template template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen

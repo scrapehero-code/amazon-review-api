@@ -2,7 +2,7 @@
 
 A very basic API to scrape product reviews from Amazon and get data in real time as JSON with all fields, that amazon product adverstising api does not provide you. 
 
-Full Tutorail - [Amazon Product Reviews API – build you own using Python](https://www.scrapehero.com/free-amazon-product-reviews-api-build-you-own-using-python/)
+Forked from [ScrapeHero/Amazon-Review-Scraper](https://github.com/scrapehero-code/amazon-review-scraper)
 
 ## Usage
 
@@ -11,7 +11,7 @@ Go into the project folder
 1. Install requirements `pip install -r requirements.txt`
 2. Set FLASK_APP - `export FLASK_APP=app.py`
 3. Run App - `flask run`
-4. Call API with Review Page URL. Eg: `http://localhost:5000/?url=https://www.amazon.com/Nike-Womens-Reax-Running-Shoes/product-reviews/B07ZPL752N/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews`
+4. Call API with Review Page URL. Eg: [`http://localhost:5000/?url=https://www.amazon.com/Nike-Womens-Reax-Running-Shoes/product-reviews/B07ZPL752N/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews`](http://localhost:5000/?url=https://www.amazon.com/Nike-Womens-Reax-Running-Shoes/product-reviews/B07ZPL752N/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews)
 
 ## Example Data Format
 
